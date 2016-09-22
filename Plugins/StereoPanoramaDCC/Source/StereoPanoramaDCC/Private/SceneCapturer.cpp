@@ -57,7 +57,7 @@ void USceneCapturer::InitCaptureComponent( USceneCaptureComponent2D* CaptureComp
 	CaptureComponent->SetVisibility( true );
 	CaptureComponent->SetHiddenInGame( false );
 
-    CaptureComponent->CaptureStereoPass = InStereoPass;
+    //CaptureComponent->CaptureStereoPass = InStereoPass;解决阴影只在一个眼睛中，注释掉
     CaptureComponent->FOVAngle = FMath::Max( HFov, VFov );
     CaptureComponent->bCaptureEveryFrame = false;
     CaptureComponent->CaptureSource = ESceneCaptureSource::SCS_FinalColorLDR;
