@@ -56,6 +56,7 @@ public:
 	static IConsoleVariable* OutputDir;
 	static IConsoleVariable* ShouldOverrideInitialYaw;
 	static IConsoleVariable* ForcedInitialYaw;
+	static IConsoleVariable* YawOffset;//add by liulong
 	static IConsoleVariable* FadeStereoToZeroAtSides;
 
 public:

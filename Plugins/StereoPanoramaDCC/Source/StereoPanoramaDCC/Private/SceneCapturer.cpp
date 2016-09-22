@@ -93,6 +93,7 @@ USceneCapturer::USceneCapturer(FVTableHelper& Helper)
     , SSMethod(FMath::Clamp<int32>(FStereoPanoramaManager::SuperSamplingMethod->GetInt(), 0, ARRAY_COUNT(g_ssPatterns)))
     , bOverrideInitialYaw(FStereoPanoramaManager::ShouldOverrideInitialYaw->GetInt() != 0)
     , ForcedInitialYaw(FRotator::ClampAxis(FStereoPanoramaManager::ForcedInitialYaw->GetFloat()))
+	, YawOffset(FRotator::ClampAxis(FStereoPanoramaManager::YawOffset->GetFloat()))
     , OutputDir(FStereoPanoramaManager::OutputDir->GetString().IsEmpty() ? FPaths::GameSavedDir() / TEXT("StereoPanorama") : FStereoPanoramaManager::OutputDir->GetString())
     , dbgDisableOffsetRotation(FStereoPanoramaManager::FadeStereoToZeroAtSides->GetInt() != 0)
 {}
@@ -114,6 +115,7 @@ USceneCapturer::USceneCapturer()
     , SSMethod( FMath::Clamp<int32>(FStereoPanoramaManager::SuperSamplingMethod->GetInt(), 0, ARRAY_COUNT(g_ssPatterns)) )
     , bOverrideInitialYaw( FStereoPanoramaManager::ShouldOverrideInitialYaw->GetInt() != 0 )
     , ForcedInitialYaw( FRotator::ClampAxis(FStereoPanoramaManager::ForcedInitialYaw->GetFloat()) )
+	, YawOffset(FRotator::ClampAxis(FStereoPanoramaManager::YawOffset->GetFloat()))
     , OutputDir( FStereoPanoramaManager::OutputDir->GetString().IsEmpty() ? FPaths::GameSavedDir() / TEXT("StereoPanorama") : FStereoPanoramaManager::OutputDir->GetString() )
     , dbgDisableOffsetRotation( FStereoPanoramaManager::FadeStereoToZeroAtSides->GetInt() != 0 )
 {
@@ -771,7 +773,7 @@ void USceneCapturer::Tick( float DeltaTime )
             CapturePlayerController->GetPlayerViewPoint(StartLocation, Rotation);
             
             Rotation.Roll = 0.0f;
-            Rotation.Yaw = (bOverrideInitialYaw) ? ForcedInitialYaw : Rotation.Yaw;
+			Rotation.Yaw = (bOverrideInitialYaw) ? ForcedInitialYaw : Rotation.Yaw + YawOffset;
             Rotation.Pitch = 90.0f;
             StartRotation = Rotation;
             CaptureStep = ECaptureStep::SetPosition;
