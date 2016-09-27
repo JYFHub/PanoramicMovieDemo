@@ -94,6 +94,7 @@ USceneCapturer::USceneCapturer(FVTableHelper& Helper)
     , bOverrideInitialYaw(FStereoPanoramaManager::ShouldOverrideInitialYaw->GetInt() != 0)
     , ForcedInitialYaw(FRotator::ClampAxis(FStereoPanoramaManager::ForcedInitialYaw->GetFloat()))
 	, YawOffset(FRotator::ClampAxis(FStereoPanoramaManager::YawOffset->GetFloat()))
+	, ImageType(FStereoPanoramaManager::ImageType->GetString().IsEmpty() ? TEXT("jpg") : FStereoPanoramaManager::ImageType->GetString())
     , OutputDir(FStereoPanoramaManager::OutputDir->GetString().IsEmpty() ? FPaths::GameSavedDir() / TEXT("StereoPanorama") : FStereoPanoramaManager::OutputDir->GetString())
     , dbgDisableOffsetRotation(FStereoPanoramaManager::FadeStereoToZeroAtSides->GetInt() != 0)
 {}
@@ -116,6 +117,7 @@ USceneCapturer::USceneCapturer()
     , bOverrideInitialYaw( FStereoPanoramaManager::ShouldOverrideInitialYaw->GetInt() != 0 )
     , ForcedInitialYaw( FRotator::ClampAxis(FStereoPanoramaManager::ForcedInitialYaw->GetFloat()) )
 	, YawOffset(FRotator::ClampAxis(FStereoPanoramaManager::YawOffset->GetFloat()))
+	, ImageType(FStereoPanoramaManager::ImageType->GetString().IsEmpty() ? TEXT("jpg") : FStereoPanoramaManager::ImageType->GetString())
     , OutputDir( FStereoPanoramaManager::OutputDir->GetString().IsEmpty() ? FPaths::GameSavedDir() / TEXT("StereoPanorama") : FStereoPanoramaManager::OutputDir->GetString() )
     , dbgDisableOffsetRotation( FStereoPanoramaManager::FadeStereoToZeroAtSides->GetInt() != 0 )
 {
@@ -830,11 +832,14 @@ void USceneCapturer::Tick( float DeltaTime )
 			TArray<FColor> CombinedAtlas;
 			CombinedAtlas.Append(SphericalLeftEyeAtlas);
 			CombinedAtlas.Append(SphericalRightEyeAtlas);
-			IImageWrapperPtr ImageWrapper = ImageWrapperModule.CreateImageWrapper(EImageFormat::JPEG/*EImageFormat::JPEG*/);
+			EImageFormat::Type format = EImageFormat::JPEG;
+			if (ImageType == "jpg") format = EImageFormat::JPEG; else if (ImageType == "png") format = EImageFormat::PNG;
+			else if (ImageType == "bmp") format = EImageFormat::BMP; else if (ImageType == "exr") format = EImageFormat::EXR;
+			IImageWrapperPtr ImageWrapper = ImageWrapperModule.CreateImageWrapper(format);
 			ImageWrapper->SetRaw(CombinedAtlas.GetData(), CombinedAtlas.GetAllocatedSize(), SphericalAtlasWidth, SphericalAtlasHeight * 2, ERGBFormat::BGRA, 8);
 			const TArray<uint8>& JPGData = ImageWrapper->GetCompressed(100);
 			// Generate name
-			FString FrameString = FString::Printf(TEXT("Frame_%05d.jpg"), CurrentFrameCount);
+			FString FrameString = FString::Printf(TEXT("Frame_%05d.%s"), CurrentFrameCount, *ImageType);
 			FString AtlasName = OutputDir / Timestamp / FrameString;
 			FFileHelper::SaveArrayToFile(JPGData, *AtlasName);
 			ImageWrapper.Reset();

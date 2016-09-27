@@ -157,6 +157,7 @@ private:
     const float ForcedInitialYaw;
     const FString OutputDir;
 	const float YawOffset;//add by liulong
+	const FString ImageType;//add by liulong
 
     bool dbgMatchCaptureSliceFovToAtlasSliceFov;
     bool dbgDisableOffsetRotation;
