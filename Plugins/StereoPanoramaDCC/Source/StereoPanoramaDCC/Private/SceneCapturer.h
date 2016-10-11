@@ -158,6 +158,7 @@ private:
     const FString OutputDir;
 	const float YawOffset;//add by liulong
 	const FString ImageType;//add by liulong
+	const int32 ImageBit;//add by liulong
 
     bool dbgMatchCaptureSliceFovToAtlasSliceFov;
     bool dbgDisableOffsetRotation;

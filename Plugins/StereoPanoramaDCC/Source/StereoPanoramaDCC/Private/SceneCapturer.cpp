@@ -95,6 +95,7 @@ USceneCapturer::USceneCapturer(FVTableHelper& Helper)
     , ForcedInitialYaw(FRotator::ClampAxis(FStereoPanoramaManager::ForcedInitialYaw->GetFloat()))
 	, YawOffset(FRotator::ClampAxis(FStereoPanoramaManager::YawOffset->GetFloat()))
 	, ImageType(FStereoPanoramaManager::ImageType->GetString().IsEmpty() ? TEXT("jpg") : FStereoPanoramaManager::ImageType->GetString())
+	, ImageBit(FStereoPanoramaManager::ImageBit->GetInt())
     , OutputDir(FStereoPanoramaManager::OutputDir->GetString().IsEmpty() ? FPaths::GameSavedDir() / TEXT("StereoPanorama") : FStereoPanoramaManager::OutputDir->GetString())
     , dbgDisableOffsetRotation(FStereoPanoramaManager::FadeStereoToZeroAtSides->GetInt() != 0)
 {}
@@ -118,6 +119,7 @@ USceneCapturer::USceneCapturer()
     , ForcedInitialYaw( FRotator::ClampAxis(FStereoPanoramaManager::ForcedInitialYaw->GetFloat()) )
 	, YawOffset(FRotator::ClampAxis(FStereoPanoramaManager::YawOffset->GetFloat()))
 	, ImageType(FStereoPanoramaManager::ImageType->GetString().IsEmpty() ? TEXT("jpg") : FStereoPanoramaManager::ImageType->GetString())
+	, ImageBit(FStereoPanoramaManager::ImageBit->GetInt())
     , OutputDir( FStereoPanoramaManager::OutputDir->GetString().IsEmpty() ? FPaths::GameSavedDir() / TEXT("StereoPanorama") : FStereoPanoramaManager::OutputDir->GetString() )
     , dbgDisableOffsetRotation( FStereoPanoramaManager::FadeStereoToZeroAtSides->GetInt() != 0 )
 {
@@ -836,7 +838,7 @@ void USceneCapturer::Tick( float DeltaTime )
 			if (ImageType == "jpg") format = EImageFormat::JPEG; else if (ImageType == "png") format = EImageFormat::PNG;
 			else if (ImageType == "bmp") format = EImageFormat::BMP; else if (ImageType == "exr") format = EImageFormat::EXR;
 			IImageWrapperPtr ImageWrapper = ImageWrapperModule.CreateImageWrapper(format);
-			ImageWrapper->SetRaw(CombinedAtlas.GetData(), CombinedAtlas.GetAllocatedSize(), SphericalAtlasWidth, SphericalAtlasHeight * 2, ERGBFormat::BGRA, 8);
+			ImageWrapper->SetRaw(CombinedAtlas.GetData(), CombinedAtlas.GetAllocatedSize(), SphericalAtlasWidth, SphericalAtlasHeight * 2, ERGBFormat::BGRA, ImageBit);
 			const TArray<uint8>& JPGData = ImageWrapper->GetCompressed(100);
 			// Generate name
 			FString FrameString = FString::Printf(TEXT("Frame_%05d.%s"), CurrentFrameCount, *ImageType);

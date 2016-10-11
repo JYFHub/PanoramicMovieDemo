@@ -58,6 +58,7 @@ public:
 	static IConsoleVariable* ForcedInitialYaw;
 	static IConsoleVariable* YawOffset;//add by liulong
 	static IConsoleVariable* ImageType;//add by liulong
+	static IConsoleVariable* ImageBit;//add by liulong
 	static IConsoleVariable* FadeStereoToZeroAtSides;
 
 public:

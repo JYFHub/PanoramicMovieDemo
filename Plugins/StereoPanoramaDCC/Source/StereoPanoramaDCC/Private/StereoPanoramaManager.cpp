@@ -27,6 +27,7 @@ IConsoleVariable* FStereoPanoramaManager::ShouldOverrideInitialYaw   = IConsoleM
 IConsoleVariable* FStereoPanoramaManager::ForcedInitialYaw           = IConsoleManager::Get().RegisterConsoleVariable(TEXT("SP.ForcedInitialYaw"), 90.0f, TEXT("Yaw value for initial Camera view direction. Set ShouldOverrideInitialYaw to true to use this value"), ECVF_Default);
 IConsoleVariable* FStereoPanoramaManager::YawOffset                  = IConsoleManager::Get().RegisterConsoleVariable(TEXT("SP.YawOffset"), 0.0f, TEXT("Value to adjust camera yaw"), ECVF_Default);
 IConsoleVariable* FStereoPanoramaManager::ImageType                  = IConsoleManager::Get().RegisterConsoleVariable(TEXT("SP.ImageType"), TEXT("jpg"), TEXT("Image Type (jpg/png/bmp/exr)"), ECVF_Default);
+IConsoleVariable* FStereoPanoramaManager::ImageBit                   = IConsoleManager::Get().RegisterConsoleVariable(TEXT("SP.ImageBit"), 8, TEXT("Image bit-depth (defult 8)"), ECVF_Default);
 IConsoleVariable* FStereoPanoramaManager::FadeStereoToZeroAtSides    = IConsoleManager::Get().RegisterConsoleVariable(TEXT("SP.FadeStereoToZeroAtSides"), false, TEXT("Fade stereo effect between left/right eye to zero at 90 degrees."), ECVF_Default);
 
 bool FStereoPanoramaManager::ValidateRendererState() const
